@@ -4,8 +4,8 @@
   --line: #d9dee5;
   --surface: #f5f7f9;
   --white: #ffffff;
-  --red: #c5162e;
-  --red-dark: #961023;
+  --red: #a71c4a;
+  --red-dark: #7e1138;
   --blue: #116eb3;
   --teal: #087d78;
   --gold: #a36b00;
@@ -37,10 +37,21 @@ a {
   color: var(--blue);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
 }
 
 a:hover {
   color: var(--red);
+}
+
+::selection {
+  color: var(--white);
+  background: var(--red);
+}
+
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
 }
 
 img {
@@ -101,14 +112,22 @@ a {
 }
 
 .nav-links a {
+  padding: 4px 1px;
   color: var(--muted);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease;
 }
 
 .nav-links a:hover {
   color: var(--ink);
+}
+
+.nav-links a.active {
+  color: var(--ink);
+  border-bottom-color: var(--red);
 }
 
 .nav-toggle {
@@ -129,9 +148,17 @@ a {
 }
 
 .hero {
-  padding-top: 44px;
-  padding-bottom: 34px;
+  padding-top: 56px;
+  padding-bottom: 40px;
   text-align: center;
+}
+
+.venue {
+  display: inline-block;
+  padding: 5px 14px;
+  border: 1px solid rgba(167, 28, 74, 0.45);
+  border-radius: 999px;
+  background: rgba(167, 28, 74, 0.06);
 }
 
 .venue,
@@ -142,7 +169,7 @@ a {
   font-weight: 800;
   line-height: 1.3;
   text-transform: uppercase;
-  letter-spacing: 0;
+  letter-spacing: 0.09em;
 }
 
 .hero h1 {
@@ -150,8 +177,9 @@ a {
   margin: 0 auto 22px;
   font-size: 46px;
   line-height: 1.13;
-  font-weight: 750;
-  letter-spacing: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .hero h1 span {
@@ -193,20 +221,21 @@ a {
 }
 
 .action {
-  min-height: 42px;
-  padding: 9px 15px;
+  min-height: 44px;
+  padding: 10px 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--ink);
   background: var(--white);
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .action svg {
@@ -217,24 +246,32 @@ a {
 .action:hover {
   border-color: var(--ink);
   color: var(--ink);
+  transform: translateY(-1px);
 }
 
 .action.primary {
   border-color: var(--red);
   color: var(--white);
   background: var(--red);
+  box-shadow: 0 6px 16px rgba(167, 28, 74, 0.22);
 }
 
 .action.primary:hover {
   border-color: var(--red-dark);
   color: var(--white);
   background: var(--red-dark);
+  box-shadow: 0 8px 20px rgba(167, 28, 74, 0.28);
 }
 
 .action.disabled {
+  border-style: dashed;
   color: #7f8790;
   background: var(--surface);
   cursor: default;
+}
+
+.action.disabled:hover {
+  transform: none;
 }
 
 .hero-statement {
@@ -242,18 +279,20 @@ a {
   color: var(--muted);
   font-size: 19px;
   font-weight: 600;
+  text-wrap: balance;
 }
 
 .hero-figure {
-  max-width: 760px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
 .hero-figure img {
   width: 100%;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--surface);
+  box-shadow: 0 18px 45px rgba(32, 37, 43, 0.08);
 }
 
 figcaption {
@@ -287,15 +326,16 @@ h2 {
   margin: 0 0 19px;
   font-size: 32px;
   line-height: 1.22;
-  font-weight: 750;
-  letter-spacing: 0;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
 }
 
 h3 {
   margin: 12px 0 9px;
   font-size: 21px;
   line-height: 1.3;
-  letter-spacing: 0;
+  letter-spacing: -0.005em;
 }
 
 p {
@@ -326,6 +366,7 @@ p {
   color: var(--red);
   font-size: 22px;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -357,11 +398,14 @@ p {
   margin: 32px 0 0;
 }
 
+.wide-figure img,
 .bordered-figure img,
 .result-figure img,
 .benchmark-figure img {
   border: 1px solid var(--line);
+  border-radius: 10px;
   background: var(--white);
+  box-shadow: 0 10px 30px rgba(32, 37, 43, 0.06);
 }
 
 .method-columns {
@@ -439,6 +483,7 @@ p {
   color: var(--red);
   font-size: 38px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .result-primary span,
@@ -451,12 +496,13 @@ p {
 .result-primary span {
   margin-top: 7px;
   font-weight: 700;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .result-comparison strong {
   margin-top: 5px;
   font-size: 20px;
+  font-variant-numeric: tabular-nums;
 }
 
 .finding-row {
@@ -547,7 +593,9 @@ p {
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--line);
+  border-radius: 10px;
   background: #111418;
+  box-shadow: 0 18px 45px rgba(32, 37, 43, 0.12);
 }
 
 .video-frame iframe {
@@ -602,7 +650,7 @@ p {
   padding: 22px 58px 22px 22px;
   overflow-x: auto;
   border: 1px solid #cdd3da;
-  border-radius: 6px;
+  border-radius: 8px;
   color: #252b31;
   background: var(--white);
   font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
@@ -622,13 +670,14 @@ p {
   align-items: center;
   gap: 6px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 6px;
   color: var(--muted);
   background: var(--white);
   font: inherit;
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
 }
 
 .copy-button:hover {
@@ -644,7 +693,7 @@ p {
 .site-footer {
   padding: 28px 0;
   color: #6d7580;
-  background: #20252b;
+  background: #251f2d;
 }
 
 .footer-inner {
@@ -786,7 +835,7 @@ p {
   }
 
   .hero-figure img {
-    border-radius: 6px;
+    border-radius: 8px;
   }
 
   h2 {
@@ -855,7 +904,7 @@ p {
   .bibtex-wrap pre {
     padding: 54px 16px 18px;
     font-size: 12px;
-    white-space: pre;
+    white-space: pre-wrap;
   }
 
   .footer-inner {
@@ -867,5 +916,11 @@ p {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
   }
 }

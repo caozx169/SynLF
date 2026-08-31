@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#c5162e">
+  <meta name="theme-color" content="#a71c4a">
   <meta name="description" content="SynLF learns zero-shot metric depth for real light-field cameras from physics-grounded light-field supervision synthesized on the fly from RGB-D data.">
   <meta name="keywords" content="SynLF, light field, metric depth, zero-shot, physics-grounded synthesis, visibility reasoning, ECCV 2026">
   <meta name="author" content="Zhexuan Cao, Yuduo Guo, Peisheng Ding, Zhan Shi, Hui Qiao">
@@ -70,6 +70,7 @@
       <div class="nav-links" id="nav-links">
         <a href="#method">Method</a>
         <a href="#results">Results</a>
+        <a href="#benchmark">Benchmark</a>
         <a href="#video">Video</a>
         <a href="#citation">Citation</a>
       </div>
@@ -183,7 +184,7 @@
       <div class="result-summary" aria-label="Quantitative comparison">
         <div class="result-primary">
           <strong>30.05</strong>
-          <span>mm MAE</span>
+          <span>MAE (mm)</span>
         </div>
         <div class="result-comparison">
           <span>Best listed prior, PlaneNet</span>
@@ -207,12 +208,12 @@
       </div>
     </section>
 
-    <section class="band benchmark-band">
+    <section class="band benchmark-band" id="benchmark">
       <div class="section-shell benchmark-grid">
         <div>
           <p class="section-kicker">Real-world benchmark</p>
-          <h2>Metric ground truth from a calibrated 9x9 light-field camera</h2>
-          <p>Our custom acquisition system pairs an industrial light-field camera with a high-precision structured-light sensor. Calibrated reprojection provides metric center-view depth over 0.5-2.5 m.</p>
+          <h2>Metric ground truth from a calibrated 9×9 light-field camera</h2>
+          <p>Our custom acquisition system pairs an industrial light-field camera with a high-precision structured-light sensor. Calibrated reprojection provides metric center-view depth over 0.5–2.5 m.</p>
           <ul class="fact-list">
             <li><strong>173</strong> annotated indoor captures for quantitative evaluation</li>
             <li><strong>30</strong> outdoor captures for qualitative evaluation</li>
