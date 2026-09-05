@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "scene": "00079",
+  "dataset_snapshot": "ECCV 2026 paper evaluation / 20251222/real",
+  "source_group": {
+    "data_root": "20251222",
+    "set_name": "real"
+  },
+  "selection": {
+    "gt_range_coverage_percent": 87.31346130371094,
+    "rationale": "Selected qualitative example from the paper-time evaluation data."
+  },
+  "coordinate_frame": "LF center view; x right, y up, camera looks along -z; units meters",
+  "center_view_index": 4,
+  "calibration": {
+    "intrinsic_matrix": [
+      [
+        4059.5178337566676,
+        0.0,
+        477.13545248124046
+      ],
+      [
+        0.0,
+        4062.8110897819297,
+        433.4954352348553
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "disparity_to_depth_mm": {
+      "a": 16618.91803669333,
+      "b": -0.0,
+      "c": -8.388456570634421
+    }
+  },
+  "display_processing": {
+    "stride": 3,
+    "depth_range_m": [
+      0.5,
+      2.5
+    ],
+    "max_depth_edge_mm": 50.0,
+    "gt_invalid_pixels": "omitted; structured-light holes are preserved",
+    "prediction_mask": "independent finite/range mask; no GT validity mask applied",
+    "triangulation": "image-grid triangles; faces crossing the depth-edge threshold are removed",
+    "color": "LF center-view grayscale, shared 0.5-99.5 percentile display normalization",
+    "appearance_input_range": [
+      0.011245529819279908,
+      0.7092968404293045
+    ]
+  },
+  "published_protocol_scene_metrics": {
+    "valid_pixels": 667388,
+    "mae_mm": 20.8766586112664,
+    "rmse_mm": 38.8676899705487,
+    "abs_rel_percent": 1.4926492620093235,
+    "delta1_percent": 99.8374259051706
+  },
+  "meshes": {
+    "structured_light_gt": {
+      "file": "structured-light-gt.ply",
+      "vertices": 76338,
+      "triangles": 150116,
+      "sha256": "2e8a128462a1e6b19b9a9c62b868550953e997618d672657bf7c72eb65fb08c4"
+    },
+    "synlf": {
+      "file": "synlf.ply",
+      "vertices": 82617,
+      "triangles": 160866,
+      "sha256": "3c407adf9e6d10cd31d99f662640839d4fc2c6bd019b89ffd14158f11209133a"
+    }
+  },
+  "source_hashes": {
+    "input_lf_stack": "e94cc2b1e3f6b0e94bd38c57c01e2ef995e4e820a0f88605ac912966591a2acb",
+    "projected_structured_light_gt": "20167cabb92501a12391d88f036bea01ad0730796ebc81bb28aac1589dc617ef",
+    "synlf_v11_disparity": "aa6e5f886c46ebecaeedd7ad9df9fcfe7d62c4cb5785dcb0106b2637ee1788a8",
+    "disparity_depth_coefficients": "a0f0ae19b1fa6a20f16333e8b234d2e88c3cc374ca552f68600289ed90e7ab2f",
+    "center_view_calibration": "60bd86fa679468bd5288c79be17fe5e0525a1bb38b4b1a3a7dd7947bfa643494"
+  }
+}

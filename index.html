@@ -69,8 +69,9 @@
       </button>
       <div class="nav-links" id="nav-links">
         <a href="#method">Method</a>
-        <a href="#results">Results</a>
         <a href="#benchmark">Benchmark</a>
+        <a href="#results">Results</a>
+        <a href="#reconstruction">3D</a>
         <a href="#video">Video</a>
         <a href="#citation">Citation</a>
       </div>
@@ -116,8 +117,9 @@
       <div class="section-shell abstract-grid">
         <div>
           <p class="section-kicker">Overview</p>
-          <h2>Metric depth without collecting a massive light-field dataset</h2>
-          <p class="lead">Monocular depth is scale-ambiguous, while learned light-field depth is constrained by scarce real supervision and brittle photometric assumptions. SynLF addresses both sides of the problem: PG-LF synthesizes geometry-consistent supervisory light fields on the fly from RGB-D, and VisDepth explicitly recomputes multi-view visibility while refining disparity.</p>
+          <h2>From RGB-D supervision to real light-field depth</h2>
+          <p class="lead">Monocular depth is scale-ambiguous. Light-field cameras provide metric cues through single-lens micro-baselines, but learned methods lack real-world supervision and often fail on weak texture or non-Lambertian surfaces. Implicit view weighting also leaves occlusion reasoning underconstrained.</p>
+          <p>SynLF addresses these two gaps: PG-LF synthesizes geometry-consistent light fields on the fly from RGB-D, and VisDepth explicitly updates multi-view visibility as it refines disparity.</p>
           <p>At inference, the trained model is applied directly to real captures. No target-camera fine-tuning or test-time adaptation is used.</p>
         </div>
         <dl class="metric-strip" aria-label="Key results">
@@ -143,8 +145,8 @@
 
     <section class="section-shell content-section" id="method">
       <p class="section-kicker">Method</p>
-      <h2>Physics-grounded supervision meets visibility-aware estimation</h2>
-      <p class="section-intro">The training and inference paths share the same geometric core: depth-aware projection. It creates supervisory views in PG-LF and exposes valid observations to VisDepth at every refinement step.</p>
+      <h2>PG-LF supervision and explicit visibility reasoning</h2>
+      <p class="section-intro">PG-LF generates training light fields from 74,013 Hypersim RGB-D images. VisDepth learns from this supervision and uses a frozen monocular prior with iterative visibility-aware matching to estimate disparity.</p>
 
       <figure class="wide-figure bordered-figure">
         <img src="static/images/pg-lf.png" alt="PG-LF synthesis uses forward splatting, non-Lambertian perturbation, and depth-dependent defocus" width="1336" height="1095" loading="lazy">
@@ -155,12 +157,12 @@
         <article>
           <div class="component-label synthesis-label"><span>01</span> PG-LF synthesis</div>
           <h3>Scalable supervision from RGB-D</h3>
-          <p>Depth-aware forward splatting preserves visibility at occlusion boundaries. Depth-dependent defocus and non-Lambertian perturbations expose the model to correspondence failures that matter on real light-field cameras.</p>
+          <p>Depth-aware forward splatting preserves occlusion ordering and clean foreground-background transitions. Disparity-coupled defocus and non-Lambertian perturbations model capture effects that corrupt multi-view correspondence.</p>
         </article>
         <article>
           <div class="component-label depth-label"><span>02</span> VisDepth</div>
           <h3>Explicit visibility at every iteration</h3>
-          <p>A frozen monocular prior stabilizes ambiguous matching without supplying metric scale. Vis-Proj recomputes per-view visibility from the evolving disparity, and visibility-weighted costs drive 24 ConvGRU updates.</p>
+          <p>A frozen Depth Anything V2 (DAv2) prior supplies semantic structure without supplying metric scale. Vis-Proj recomputes per-view visibility from the evolving disparity at every iteration, and visibility-weighted costs drive 24 ConvGRU updates.</p>
         </article>
       </div>
     </section>
@@ -168,7 +170,7 @@
     <section class="band evidence-band">
       <div class="section-shell content-section compact-section">
         <p class="section-kicker">Why the synthesis transfers</p>
-        <h2>Preserve geometry, perturb the brittle appearance cues</h2>
+        <h2>Geometric consistency with real capture effects</h2>
         <figure class="wide-figure">
           <img src="static/images/physics-grounding.png" alt="Synthetic and real light fields show related epipolar geometry; non-Lambertian and defocus modeling improve difficult real predictions" width="2882" height="777" loading="lazy">
           <figcaption>Synthetic and real light fields retain comparable disparity-induced EPI structure. The two capture-aware terms target reflective surfaces and strong defocus.</figcaption>
@@ -176,10 +178,30 @@
       </div>
     </section>
 
+    <section class="band benchmark-band" id="benchmark">
+      <div class="section-shell benchmark-grid">
+        <div>
+          <p class="section-kicker">Real-world benchmark</p>
+          <h2>Calibrated metric depth for a 9&times;9 light-field camera</h2>
+          <p>Our acquisition system pairs an industrial light-field camera with a structured-light sensor. Checkerboard calibration and a fitted disparity-to-depth mapping align metric ground truth to the LF center view over 0.5&ndash;2.5 m.</p>
+          <ul class="fact-list">
+            <li><strong>173</strong> annotated indoor captures</li>
+            <li><strong>30</strong> outdoor captures for qualitative evaluation</li>
+            <li>Weak texture, specular surfaces, defocus, and semi-transparency</li>
+          </ul>
+          <p class="protocol-note">All methods use the same structured-light validity mask for quantitative evaluation. Missing GT, especially on non-Lambertian surfaces, remains excluded.</p>
+        </div>
+        <figure class="benchmark-figure">
+          <img src="static/images/benchmark.png" alt="Light-field calibration target, reprojection error histogram, disparity-to-depth calibration, aligned structured-light depth, and capture depth distribution" width="1433" height="730" loading="lazy">
+          <figcaption>Calibration, structured-light alignment, and the captured depth distribution.</figcaption>
+        </figure>
+      </div>
+    </section>
+
     <section class="section-shell content-section" id="results">
       <p class="section-kicker">Zero-shot results</p>
-      <h2>Cleaner metric depth across real capture failures</h2>
-      <p class="section-intro">SynLF is evaluated on 173 annotated indoor captures spanning weak texture, reflective metal, strong defocus, and semi-transparency. All methods use the same valid structured-light pixels.</p>
+      <h2>Zero-shot metric depth on real captures</h2>
+      <p class="section-intro">SynLF reaches 30.05 mm MAE and 1.38% AbsRel on the indoor benchmark under the paper's evaluation protocol, without real-capture fine-tuning or test-time adaptation.</p>
 
       <div class="result-summary" aria-label="Quantitative comparison">
         <div class="result-primary">
@@ -201,6 +223,32 @@
         <figcaption>Four difficult regimes: weak texture, specular metal, semi-transparency, and strong defocus. White ground-truth pixels are sensor-invalid; red is near and blue is far.</figcaption>
       </figure>
 
+      <div class="result-tables">
+        <div>
+          <table class="evidence-table">
+            <caption>Data and architecture contributions <span>MAE (mm), lower is better</span></caption>
+            <thead><tr><th scope="col">Architecture</th><th scope="col">HCI</th><th scope="col">PG-LF</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">PlaneNet</th><td>91.31</td><td>53.11</td></tr>
+              <tr><th scope="row">VisDepth</th><td>52.95</td><td class="best-value">30.05</td></tr>
+            </tbody>
+          </table>
+          <p class="table-note">Both the synthesized supervision and the visibility-aware estimator contribute to the final result.</p>
+        </div>
+        <div>
+          <table class="evidence-table">
+            <caption>VisDepth ablation <span>Lower is better for both metrics</span></caption>
+            <thead><tr><th scope="col">Variant</th><th scope="col">MAE (mm)</th><th scope="col">AbsRel (%)</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Without prior</th><td>35.75</td><td>1.63</td></tr>
+              <tr><th scope="row">Without visibility</th><td>39.03</td><td>1.90</td></tr>
+              <tr><th scope="row">Full SynLF</th><td class="best-value">30.05</td><td class="best-value">1.38</td></tr>
+            </tbody>
+          </table>
+          <p class="table-note">Removing explicit visibility produces the larger degradation in this ablation.</p>
+        </div>
+      </div>
+
       <div class="finding-row">
         <p><strong>Data contribution.</strong> Replacing HCI supervision with PG-LF improves PlaneNet from 91.31 to 53.11 mm MAE.</p>
         <p><strong>Architecture contribution.</strong> Under identical PG-LF supervision, VisDepth improves 53.11 to 30.05 mm MAE.</p>
@@ -208,32 +256,82 @@
       </div>
     </section>
 
-    <section class="band benchmark-band" id="benchmark">
-      <div class="section-shell benchmark-grid">
-        <div>
-          <p class="section-kicker">Real-world benchmark</p>
-          <h2>Metric ground truth from a calibrated 9×9 light-field camera</h2>
-          <p>Our custom acquisition system pairs an industrial light-field camera with a high-precision structured-light sensor. Calibrated reprojection provides metric center-view depth over 0.5–2.5 m.</p>
-          <ul class="fact-list">
-            <li><strong>173</strong> annotated indoor captures for quantitative evaluation</li>
-            <li><strong>30</strong> outdoor captures for qualitative evaluation</li>
-            <li>Diffuse, specular, transparent, reflective, and textureless surfaces</li>
-          </ul>
-        </div>
-        <figure class="benchmark-figure">
-          <img src="static/images/benchmark.png" alt="Light-field calibration target, reprojection error histogram, disparity-to-depth calibration, aligned structured-light depth, and capture depth distribution" width="1433" height="730" loading="lazy">
-          <figcaption>Calibration, structured-light alignment, and the captured depth distribution.</figcaption>
+    <section class="band pointcloud-band" id="reconstruction">
+      <div class="section-shell content-section compact-section">
+        <p class="section-kicker">Interactive 3D reconstruction</p>
+        <h2>Structured-light reference and SynLF reconstruction</h2>
+        <p class="section-intro">Four selected real captures, spanning sculpture scenes, reflective metal, and transparent objects. Meshes use the paper's predictions and capture-specific calibration.</p>
+
+        <figure class="pointcloud-figure" data-mesh-viewer data-base-path="static/meshes/" data-initial-scene="00007">
+          <div class="pointcloud-toolbar">
+            <label class="mesh-scene-control" for="mesh-scene-select">
+              <span>Scene</span>
+              <select id="mesh-scene-select" data-scene-select disabled>
+                <option value="00007">00007</option>
+                <option value="00009">00009</option>
+                <option value="00079">00079</option>
+                <option value="20251031-real2-00016">00016</option>
+              </select>
+            </label>
+            <div class="pointcloud-segment" role="group" aria-label="Mesh view">
+              <button type="button" data-view-mode="compare" aria-pressed="true" disabled>Compare</button>
+              <button type="button" data-view-mode="gt" aria-pressed="false" disabled>GT</button>
+              <button type="button" data-view-mode="synlf" aria-pressed="false" disabled>SynLF</button>
+            </div>
+            <div class="pointcloud-segment" role="group" aria-label="Mesh color">
+              <button type="button" data-color-mode="appearance" aria-pressed="true" disabled>Appearance</button>
+              <button type="button" data-color-mode="depth" aria-pressed="false" disabled>Metric depth</button>
+            </div>
+            <div class="pointcloud-icon-actions">
+              <button type="button" data-reset-view aria-label="Reset 3D view" title="Reset 3D view" disabled>
+                <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+              </button>
+              <button type="button" data-fullscreen aria-label="View fullscreen" title="View fullscreen">
+                <i data-lucide="maximize-2" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="pointcloud-stage is-compare" data-mesh-stage>
+            <canvas data-mesh-canvas role="img" aria-label="Synchronized 3D mesh comparison of projected structured-light ground truth and the SynLF zero-shot prediction"></canvas>
+            <div class="pointcloud-divider" data-mesh-divider aria-hidden="true"></div>
+            <div class="pointcloud-labels" data-mesh-labels aria-hidden="true">
+              <span data-mesh-label="gt">Structured-light GT</span>
+              <span data-mesh-label="synlf">SynLF</span>
+            </div>
+            <div class="pointcloud-depth-legend" data-depth-legend hidden aria-hidden="true">
+              <span>0.5 m</span>
+              <span>Metric depth</span>
+              <span>2.5 m</span>
+            </div>
+            <div class="pointcloud-status" data-mesh-status role="status" aria-live="polite">Loading meshes...</div>
+          </div>
+
+          <div class="pointcloud-readout" data-mesh-readout aria-live="polite">Scene 00007</div>
+          <figcaption>Both meshes use the same center-view appearance. GT holes remain open, and the SynLF mesh uses no GT validity mask. Predictions in missing-GT regions are qualitative and do not establish reconstruction accuracy.</figcaption>
         </figure>
       </div>
     </section>
 
     <section class="section-shell content-section outdoor-section">
       <p class="section-kicker">Beyond the annotated indoor benchmark</p>
-      <h2>Stable qualitative transfer to outdoor captures</h2>
+      <h2>Outdoor captures and public LF benchmarks</h2>
+      <p class="section-intro">The same model transfers to outdoor captures and synthetic LF benchmarks without dataset-specific adaptation.</p>
       <figure class="wide-figure">
         <img src="static/images/outdoor.png" alt="Three outdoor light-field center views and corresponding SynLF disparity predictions" width="1753" height="878" loading="lazy">
         <figcaption>Outdoor predictions remain spatially coherent under broader appearance and depth variations; these captures do not have ground-truth depth.</figcaption>
       </figure>
+      <div class="generalization-results">
+        <table class="evidence-table">
+          <caption>Public LF benchmarks <span>Disparity MSE &times; 100, lower is better</span></caption>
+          <thead><tr><th scope="col">Method</th><th scope="col">HCI</th><th scope="col">Inria</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">OAVC</th><td>2.23</td><td class="best-value">2.17</td></tr>
+            <tr><th scope="row">SynLF</th><td class="best-value">2.08</td><td>2.35</td></tr>
+          </tbody>
+        </table>
+        <p class="table-note">SynLF is competitive on both benchmarks, with lower error than OAVC on HCI and higher error on Inria.</p>
+      </div>
     </section>
 
     <section class="band video-band" id="video">
@@ -248,11 +346,11 @@
 
     <section class="section-shell content-section scope-section">
       <p class="section-kicker">Current scope</p>
-      <h2>What SynLF models today</h2>
+      <h2>Scope and limitations</h2>
       <div class="scope-grid">
-        <p><strong>Covered.</strong> Visibility, depth-dependent defocus, and non-Lambertian appearance perturbations for static light-field depth estimation.</p>
-        <p><strong>Evaluation.</strong> Quantitative results focus on static indoor scenes and valid structured-light pixels; outdoor results are qualitative.</p>
-        <p><strong>Next.</strong> Richer optical models, dynamic scenes, and broader physics-grounded supervision for light-field perception.</p>
+        <p><strong>Approximate optics.</strong> PG-LF models visibility, depth-dependent defocus, and non-Lambertian perturbations, but does not reproduce the full optical image-formation process.</p>
+        <p><strong>Static scenes.</strong> The reported experiments concern static light-field captures. They do not establish performance on dynamic scenes.</p>
+        <p><strong>Incomplete ground truth.</strong> Quantitative evaluation covers valid structured-light pixels. Outdoor captures and regions without GT provide qualitative evidence only.</p>
       </div>
     </section>
 
@@ -287,5 +385,15 @@
 
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
   <script src="static/js/site.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./static/vendor/three/three.module.mjs",
+      "./static/vendor/three/three.core.js": "./static/vendor/three/three.core.mjs",
+      "three/addons/": "./static/vendor/three/addons/"
+    }
+  }
+  </script>
+  <script type="module" src="static/js/mesh-viewer.mjs"></script>
 </body>
 </html>
