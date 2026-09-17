@@ -1,0 +1,4 @@
+defaults:
+  - mono_base
+  - mono_dataset: hypersim
+_target_: dataset.monosynthetic.MonoSyntheticDataset

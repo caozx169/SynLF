@@ -1,0 +1,12 @@
+defaults:
+  - model: visdepth
+  - _self_
+
+mindisp: -9
+maxdisp: 20
+cropsize: [768, 768]
+viewspos: [[-2, 0], [-1, 0], [0, -2], [0, -1], [0, 0], [0, 1], [0, 2], [1, 0], [2, 0]]
+
+# The complete VisDepth checkpoint contains the frozen Depth Anything V2 weights.
+model:
+  vit_ckpt: null

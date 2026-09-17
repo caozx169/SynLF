@@ -1,0 +1,29 @@
+# GRU 模型 loss 配置
+disp_raw:
+  l1:
+    _target_: losses.loss.MultiScaleNormLoss
+    scale: 1
+    p_norm: 1
+    weight: 1.0
+disp:
+  l1:
+    _target_: losses.loss.MultiScaleNormLoss
+    scale: 1
+    p_norm: 1
+    weight: 1.0
+  ssi_mage:
+    _target_: losses.loss.MultiScaleDerivativeLoss
+    scale: 4
+    p_norm: 1
+    order: 1
+    ssi: true
+    weight: 2.0
+disp_preds:
+  seql1:
+    _target_: losses.loss.SeqLoss
+    gamma: 0.9
+    base_loss:
+      _target_: losses.loss.MultiScaleNormLoss
+      scale: 1
+      p_norm: 1
+    weight: 1.0

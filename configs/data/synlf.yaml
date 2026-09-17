@@ -1,0 +1,8 @@
+# Shared disparity-to-depth calibration. Depth is measured in millimeters.
+a: 16516.42667218405
+b: 0.0
+c: -8.300164241996741
+camera_matrix:
+  - [4080.257155510916, 0.0, 471.80508021778144]
+  - [0.0, 4079.993883499513, 422.95829873577895]
+  - [0.0, 0.0, 1.0]

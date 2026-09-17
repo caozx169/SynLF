@@ -1,0 +1,74 @@
+{
+  "schema_version": 2,
+  "scene": "00007",
+  "dataset_snapshot": "ECCV 2026 paper evaluation / 20251222/real",
+  "source_group": {
+    "data_root": "20251222",
+    "set_name": "real"
+  },
+  "selection": {
+    "gt_range_coverage_percent": 72.4456787109375,
+    "rationale": "Selected qualitative example from the paper-time evaluation data."
+  },
+  "coordinate_frame": "LF center view; x right, y up, camera looks along -z; units meters",
+  "center_view_index": 4,
+  "calibration": {
+    "intrinsic_matrix": [
+      [
+        4059.5178337566676,
+        0.0,
+        477.13545248124046
+      ],
+      [
+        0.0,
+        4062.8110897819297,
+        433.4954352348553
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "disparity_to_depth_mm": {
+      "a": 16618.91803669333,
+      "b": -0.0,
+      "c": -8.388456570634421
+    }
+  },
+  "display_processing": {
+    "stride": 3,
+    "depth_range_m": [
+      0.5,
+      2.5
+    ],
+    "max_depth_edge_mm": 50.0,
+    "gt_invalid_pixels": "omitted; structured-light holes are preserved",
+    "prediction_mask": "independent finite/range mask; no GT validity mask applied",
+    "triangulation": "image-grid triangles; faces crossing the depth-edge threshold are removed",
+    "color": "LF center-view grayscale, shared 0.5-99.5 percentile display normalization",
+    "appearance_input_range": [
+      0.03104984648525715,
+      0.5528851065039634
+    ]
+  },
+  "published_protocol_scene_metrics": {
+    "valid_pixels": 536467,
+    "mae_mm": 12.082196391597858,
+    "rmse_mm": 37.23498472966539,
+    "abs_rel_percent": 0.5489399308804228,
+    "delta1_percent": 99.70156598635145
+  },
+  "meshes": {
+    "structured_light_gt": {
+      "file": "structured-light-gt.ply",
+      "vertices": 63518,
+      "triangles": 122401
+    },
+    "synlf": {
+      "file": "synlf.ply",
+      "vertices": 87547,
+      "triangles": 170123
+    }
+  }
+}

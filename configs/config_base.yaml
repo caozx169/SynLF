@@ -1,0 +1,54 @@
+defaults:
+  - _self_
+  - paths: default
+  - train_dataset: mono
+  - model: visdepth
+  - loss: gru
+  - metric: disparity
+  - val_dataset: null
+  - override hydra/job_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+name: SynLF
+seed: 42
+resume: null
+logdir: ${paths.output_root}
+
+# VisDepth search range used by training and checkpoint architecture.
+mindisp: -9
+maxdisp: 20
+cropsize: [768, 768]
+viewspos: [[-2, 0], [-1, 0], [0, -2], [0, -1], [0, 0], [0, 1], [0, 2], [1, 0], [2, 0]]
+
+optimizer:
+  scratch_lr: 5e-4
+  finetuned_lr: 5e-5
+  same_lr: true
+  weight_decay: 1e-4
+  warmup_ratio: 0.1
+  final_div_factor: 50
+  power: 0.9
+
+training:
+  precision: 32-true
+  max_steps: 8000
+  batchsize: 2
+  accumulate_grad_batches: 1
+  num_workers: 4
+  devices: [0, 1, 2, 3, 4, 5, 6, 7]
+  log_every_n_steps: 8
+  gradient_clip_val: 10.0
+  num_sanity_val_steps: 0
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+
+checkpoint:
+  monitor: null
+  save_top_k: 1
+  save_last: true
+  every_n_train_steps: 800
+  filename: visdepth-{step:06d}

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#a71c4a">
+  <meta name="description" content="SynLF learns zero-shot metric depth for real light-field cameras from physics-grounded light-field supervision synthesized on the fly from RGB-D data.">
+  <meta name="keywords" content="SynLF, light field, metric depth, zero-shot, physics-grounded synthesis, visibility reasoning, ECCV 2026">
+  <meta name="author" content="Zhexuan Cao, Yuduo Guo, Peisheng Ding, Zhan Shi, Hui Qiao">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SynLF">
+  <meta property="og:title" content="SynLF: Zero-Shot Metric Depth from Light Field Cameras">
+  <meta property="og:description" content="Physics-grounded synthesis turns large-scale RGB-D into light-field supervision for direct, zero-shot metric depth on real captures.">
+  <meta property="og:url" content="https://caozx169.github.io/SynLF/">
+  <meta property="og:image" content="https://caozx169.github.io/SynLF/static/images/social-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Overview of SynLF training on synthetic light fields and inference on real captures">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SynLF: Zero-Shot Metric Depth from Light Field Cameras">
+  <meta name="twitter:description" content="Physics-grounded light-field synthesis for zero-shot metric depth on real captures.">
+  <meta name="twitter:image" content="https://caozx169.github.io/SynLF/static/images/social-preview.jpg">
+
+  <meta name="citation_title" content="SynLF: Zero-Shot Metric Depth from Light Field Cameras via Physics-Grounded Synthesis">
+  <meta name="citation_author" content="Cao, Zhexuan">
+  <meta name="citation_author" content="Guo, Yuduo">
+  <meta name="citation_author" content="Ding, Peisheng">
+  <meta name="citation_author" content="Shi, Zhan">
+  <meta name="citation_author" content="Qiao, Hui">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="European Conference on Computer Vision">
+  <meta name="citation_pdf_url" content="https://caozx169.github.io/SynLF/static/pdfs/SynLF_ECCV2026.pdf">
+
+  <title>SynLF | ECCV 2026</title>
+  <link rel="icon" type="image/png" href="static/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "SynLF: Zero-Shot Metric Depth from Light Field Cameras via Physics-Grounded Synthesis",
+    "author": [
+      {"@type": "Person", "name": "Zhexuan Cao"},
+      {"@type": "Person", "name": "Yuduo Guo"},
+      {"@type": "Person", "name": "Peisheng Ding"},
+      {"@type": "Person", "name": "Zhan Shi"},
+      {"@type": "Person", "name": "Hui Qiao"}
+    ],
+    "datePublished": "2026",
+    "publisher": {"@type": "Organization", "name": "European Conference on Computer Vision"},
+    "url": "https://caozx169.github.io/SynLF/",
+    "image": "https://caozx169.github.io/SynLF/static/images/social-preview.jpg",
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav-shell" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="SynLF home">SynLF</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" title="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#method">Method</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="#results">Results</a>
+        <a href="#reconstruction">3D</a>
+        <a href="#video">Video</a>
+        <a href="#citation">Citation</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section-shell">
+      <p class="venue">ECCV 2026</p>
+      <h1><span>SynLF:</span> Zero-Shot Metric Depth from Light Field Cameras via Physics-Grounded Synthesis</h1>
+      <div class="authors" aria-label="Authors">
+        <a href="https://github.com/caozx169" target="_blank" rel="noreferrer">Zhexuan Cao</a>
+        <span>Yuduo Guo</span>
+        <span>Peisheng Ding</span>
+        <span>Zhan Shi</span>
+        <span>Hui Qiao<sup>*</sup></span>
+      </div>
+      <p class="affiliation">Department of Automation, Tsinghua University <span aria-hidden="true">·</span> <sup>*</sup>Corresponding author</p>
+
+      <div class="action-row" aria-label="Project resources">
+        <a class="action primary" href="static/pdfs/SynLF_ECCV2026.pdf" target="_blank">
+          <i data-lucide="file-text" aria-hidden="true"></i>
+          Paper
+        </a>
+        <a class="action" href="https://www.youtube.com/watch?v=_5iABP8FIG0" target="_blank" rel="noreferrer">
+          <i data-lucide="play" aria-hidden="true"></i>
+          Video
+        </a>
+        <a class="action" href="https://github.com/caozx169/SynLF" target="_blank" rel="noreferrer">
+          <i data-lucide="github" aria-hidden="true"></i>
+          Code
+        </a>
+        <a class="action" href="https://cloud.tsinghua.edu.cn/d/b345f47c4c454c4bbb32/" target="_blank" rel="noreferrer">
+          <i data-lucide="download" aria-hidden="true"></i>
+          Data &amp; Weights
+        </a>
+      </div>
+
+      <p class="hero-statement">Train on synthesized light fields. Infer directly on real captures.</p>
+      <figure class="hero-figure">
+        <img src="static/images/overview.png" alt="SynLF synthesizes light-field supervision from RGB-D during training and predicts metric depth directly from real light-field captures at inference" width="1929" height="967" fetchpriority="high">
+        <figcaption>PG-LF supervision transfers directly to real captures without fine-tuning.</figcaption>
+      </figure>
+    </section>
+
+    <section class="band abstract-band" id="overview">
+      <div class="section-shell abstract-grid">
+        <div>
+          <p class="section-kicker">Overview</p>
+          <h2>From RGB-D supervision to real light-field depth</h2>
+          <p class="lead">Monocular depth is scale-ambiguous. Light-field cameras provide metric cues through single-lens micro-baselines, but learned methods lack real-world supervision and often fail on weak texture or non-Lambertian surfaces. Implicit view weighting also leaves occlusion reasoning underconstrained.</p>
+          <p>SynLF addresses these two gaps: PG-LF synthesizes geometry-consistent light fields on the fly from RGB-D, and VisDepth explicitly updates multi-view visibility as it refines disparity.</p>
+          <p>At inference, the trained model is applied directly to real captures. No target-camera fine-tuning or test-time adaptation is used.</p>
+        </div>
+        <dl class="metric-strip" aria-label="Key results">
+          <div>
+            <dt>30.05 mm</dt>
+            <dd>MAE on real indoor captures</dd>
+          </div>
+          <div>
+            <dt>1.38%</dt>
+            <dd>Absolute relative error</dd>
+          </div>
+          <div>
+            <dt>74,013</dt>
+            <dd>RGB-D training images</dd>
+          </div>
+          <div>
+            <dt>Zero</dt>
+            <dd>Real-capture fine-tuning</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section-shell content-section" id="method">
+      <p class="section-kicker">Method</p>
+      <h2>PG-LF supervision and explicit visibility reasoning</h2>
+      <p class="section-intro">PG-LF generates training light fields from 74,013 Hypersim RGB-D images. VisDepth learns from this supervision and uses a frozen monocular prior with iterative visibility-aware matching to estimate disparity.</p>
+
+      <figure class="wide-figure bordered-figure">
+        <img src="static/images/pg-lf.png" alt="PG-LF synthesis uses forward splatting, non-Lambertian perturbation, and depth-dependent defocus" width="1336" height="1095" loading="lazy">
+        <figcaption>PG-LF synthesis models the imaging effects that most directly break disparity correspondence.</figcaption>
+      </figure>
+
+      <div class="method-columns">
+        <article>
+          <div class="component-label synthesis-label"><span>01</span> PG-LF synthesis</div>
+          <h3>Scalable supervision from RGB-D</h3>
+          <p>Depth-aware forward splatting preserves occlusion ordering and clean foreground-background transitions. Disparity-coupled defocus and non-Lambertian perturbations model capture effects that corrupt multi-view correspondence.</p>
+        </article>
+        <article>
+          <div class="component-label depth-label"><span>02</span> VisDepth</div>
+          <h3>Explicit visibility at every iteration</h3>
+          <p>A frozen Depth Anything V2 (DAv2) prior supplies semantic structure without supplying metric scale. Vis-Proj recomputes per-view visibility from the evolving disparity at every iteration, and visibility-weighted costs drive 24 ConvGRU updates.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="band evidence-band">
+      <div class="section-shell content-section compact-section">
+        <p class="section-kicker">Why the synthesis transfers</p>
+        <h2>Geometric consistency with real capture effects</h2>
+        <figure class="wide-figure">
+          <img src="static/images/physics-grounding.png" alt="Synthetic and real light fields show related epipolar geometry; non-Lambertian and defocus modeling improve difficult real predictions" width="2882" height="777" loading="lazy">
+          <figcaption>Synthetic and real light fields retain comparable disparity-induced EPI structure. The two capture-aware terms target reflective surfaces and strong defocus.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="band benchmark-band" id="benchmark">
+      <div class="section-shell benchmark-grid">
+        <div>
+          <p class="section-kicker">Real-world benchmark</p>
+          <h2>Calibrated metric depth for a 9&times;9 light-field camera</h2>
+          <p>Our acquisition system pairs an industrial light-field camera with a structured-light sensor. Checkerboard calibration and a fitted disparity-to-depth mapping align metric ground truth to the LF center view over 0.5&ndash;2.5 m.</p>
+          <ul class="fact-list">
+            <li><strong>173</strong> annotated indoor captures</li>
+            <li><strong>30</strong> outdoor captures for qualitative evaluation</li>
+            <li>Weak texture, specular surfaces, defocus, and semi-transparency</li>
+          </ul>
+          <p class="protocol-note">Quantitative results use a 142-capture split, with the same valid structured-light pixels evaluated for every method.</p>
+        </div>
+        <figure class="benchmark-figure">
+          <img src="static/images/benchmark.png" alt="Light-field calibration target, reprojection error histogram, disparity-to-depth calibration, aligned structured-light depth, and capture depth distribution" width="1433" height="730" loading="lazy">
+          <figcaption>Calibration, structured-light alignment, and the captured depth distribution.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-shell content-section" id="results">
+      <p class="section-kicker">Zero-shot results</p>
+      <h2>Zero-shot metric depth on real captures</h2>
+      <p class="section-intro">SynLF reaches 30.05 mm MAE and 1.38% AbsRel on the indoor benchmark under the paper's evaluation protocol, without real-capture fine-tuning or test-time adaptation.</p>
+
+      <div class="result-summary" aria-label="Quantitative comparison">
+        <div class="result-primary">
+          <strong>30.05</strong>
+          <span>MAE (mm)</span>
+        </div>
+        <div class="result-comparison">
+          <span>Best listed prior, PlaneNet</span>
+          <strong>91.31 mm</strong>
+        </div>
+        <div class="result-comparison">
+          <span>Same VisDepth architecture, HCI supervision</span>
+          <strong>52.95 mm</strong>
+        </div>
+      </div>
+
+      <figure class="wide-figure result-figure">
+        <img src="static/images/real-results.png" alt="Qualitative comparison of light-field depth methods on four real indoor scenes, with SynLF producing cleaner and more coherent metric depth" width="3212" height="1447" loading="lazy">
+        <figcaption>Four difficult regimes: weak texture, specular metal, semi-transparency, and strong defocus. White ground-truth pixels are sensor-invalid; red is near and blue is far.</figcaption>
+      </figure>
+
+      <div class="result-tables">
+        <div>
+          <table class="evidence-table">
+            <caption>Data and architecture contributions <span>MAE (mm), lower is better</span></caption>
+            <thead><tr><th scope="col">Architecture</th><th scope="col">HCI</th><th scope="col">PG-LF</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">PlaneNet</th><td>91.31</td><td>53.11</td></tr>
+              <tr><th scope="row">VisDepth</th><td>52.95</td><td class="best-value">30.05</td></tr>
+            </tbody>
+          </table>
+          <p class="table-note">Both the synthesized supervision and the visibility-aware estimator contribute to the final result.</p>
+        </div>
+        <div>
+          <table class="evidence-table">
+            <caption>VisDepth ablation <span>Lower is better for both metrics</span></caption>
+            <thead><tr><th scope="col">Variant</th><th scope="col">MAE (mm)</th><th scope="col">AbsRel (%)</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Without prior</th><td>35.75</td><td>1.63</td></tr>
+              <tr><th scope="row">Without visibility</th><td>39.03</td><td>1.90</td></tr>
+              <tr><th scope="row">Full SynLF</th><td class="best-value">30.05</td><td class="best-value">1.38</td></tr>
+            </tbody>
+          </table>
+          <p class="table-note">Removing explicit visibility produces the larger degradation in this ablation.</p>
+        </div>
+      </div>
+
+      <div class="finding-row">
+        <p><strong>Data contribution.</strong> Replacing HCI supervision with PG-LF improves PlaneNet from 91.31 to 53.11 mm MAE.</p>
+        <p><strong>Architecture contribution.</strong> Under identical PG-LF supervision, VisDepth improves 53.11 to 30.05 mm MAE.</p>
+        <p><strong>Capture modeling.</strong> Defocus and non-Lambertian terms jointly improve 50.01 to 30.05 mm MAE.</p>
+      </div>
+    </section>
+
+    <section class="band pointcloud-band" id="reconstruction">
+      <div class="section-shell content-section compact-section">
+        <p class="section-kicker">Interactive 3D reconstruction</p>
+        <h2>Structured-light reference and SynLF reconstruction</h2>
+        <p class="section-intro">Explore four scenes from the paper: sculptures, reflective metal, and transparent objects.</p>
+
+        <figure class="pointcloud-figure" data-mesh-viewer data-base-path="static/meshes/" data-initial-scene="00007">
+          <div class="pointcloud-toolbar">
+            <label class="mesh-scene-control" for="mesh-scene-select">
+              <span>Scene</span>
+              <select id="mesh-scene-select" data-scene-select disabled>
+                <option value="00007">00007</option>
+                <option value="00009">00009</option>
+                <option value="00079">00079</option>
+                <option value="20251031-real2-00016">00016</option>
+              </select>
+            </label>
+            <div class="pointcloud-segment" role="group" aria-label="Mesh view">
+              <button type="button" data-view-mode="compare" aria-pressed="true" disabled>Compare</button>
+              <button type="button" data-view-mode="gt" aria-pressed="false" disabled>GT</button>
+              <button type="button" data-view-mode="synlf" aria-pressed="false" disabled>SynLF</button>
+            </div>
+            <div class="pointcloud-segment" role="group" aria-label="Mesh color">
+              <button type="button" data-color-mode="appearance" aria-pressed="true" disabled>Appearance</button>
+              <button type="button" data-color-mode="depth" aria-pressed="false" disabled>Metric depth</button>
+            </div>
+            <div class="pointcloud-icon-actions">
+              <button type="button" data-reset-view aria-label="Reset 3D view" title="Reset 3D view" disabled>
+                <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+              </button>
+              <button type="button" data-fullscreen aria-label="View fullscreen" title="View fullscreen">
+                <i data-lucide="maximize-2" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="pointcloud-stage is-compare" data-mesh-stage>
+            <canvas data-mesh-canvas role="img" aria-label="Synchronized 3D mesh comparison of projected structured-light ground truth and the SynLF zero-shot prediction"></canvas>
+            <div class="pointcloud-divider" data-mesh-divider aria-hidden="true"></div>
+            <div class="pointcloud-labels" data-mesh-labels aria-hidden="true">
+              <span data-mesh-label="gt">Structured-light GT</span>
+              <span data-mesh-label="synlf">SynLF</span>
+            </div>
+            <div class="pointcloud-depth-legend" data-depth-legend hidden aria-hidden="true">
+              <span>0.5 m</span>
+              <span>Metric depth</span>
+              <span>2.5 m</span>
+            </div>
+            <div class="pointcloud-status" data-mesh-status role="status" aria-live="polite">Loading meshes...</div>
+          </div>
+
+          <div class="pointcloud-readout" data-mesh-readout aria-live="polite">Scene 00007</div>
+          <figcaption>Both meshes use center-view colors. The structured-light reference preserves its measurement gaps; SynLF shows the predicted surface.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-shell content-section outdoor-section">
+      <p class="section-kicker">Beyond the annotated indoor benchmark</p>
+      <h2>Outdoor captures and public LF benchmarks</h2>
+      <p class="section-intro">The same model transfers to outdoor captures and synthetic LF benchmarks without dataset-specific adaptation.</p>
+      <figure class="wide-figure">
+        <img src="static/images/outdoor.png" alt="Three outdoor light-field center views and corresponding SynLF disparity predictions" width="1753" height="878" loading="lazy">
+        <figcaption>Outdoor predictions remain spatially coherent under broader appearance and depth variations; these captures do not have ground-truth depth.</figcaption>
+      </figure>
+      <div class="generalization-results">
+        <table class="evidence-table">
+          <caption>Public LF benchmarks <span>Disparity MSE &times; 100, lower is better</span></caption>
+          <thead><tr><th scope="col">Method</th><th scope="col">HCI</th><th scope="col">Inria</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">OAVC</th><td>2.23</td><td class="best-value">2.17</td></tr>
+            <tr><th scope="row">SynLF</th><td class="best-value">2.08</td><td>2.35</td></tr>
+          </tbody>
+        </table>
+        <p class="table-note">SynLF is competitive on both benchmarks, with lower error than OAVC on HCI and higher error on Inria.</p>
+      </div>
+    </section>
+
+    <section class="band video-band" id="video">
+      <div class="section-shell content-section compact-section">
+        <p class="section-kicker">Presentation</p>
+        <h2>Five-minute ECCV overview</h2>
+        <div class="video-frame">
+          <iframe src="https://www.youtube-nocookie.com/embed/_5iABP8FIG0" title="SynLF ECCV 2026 presentation" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell content-section scope-section">
+      <p class="section-kicker">Experiments</p>
+      <h2>Experimental setting</h2>
+      <div class="scope-grid">
+        <p><strong>Image formation.</strong> PG-LF models visibility, depth-dependent defocus, and view-dependent appearance with a lightweight synthesis pipeline.</p>
+        <p><strong>Static scenes.</strong> Indoor and outdoor experiments use static light-field captures.</p>
+        <p><strong>Depth reference.</strong> Indoor metrics use valid structured-light measurements. Outdoor scenes are evaluated qualitatively.</p>
+      </div>
+    </section>
+
+    <section class="band citation-band" id="citation">
+      <div class="section-shell citation-shell">
+        <div>
+          <p class="section-kicker">Citation</p>
+          <h2>BibTeX</h2>
+        </div>
+        <div class="bibtex-wrap">
+          <button class="copy-button" type="button" data-copy-target="bibtex" title="Copy BibTeX">
+            <i data-lucide="copy" aria-hidden="true"></i>
+            <span>Copy</span>
+          </button>
+          <pre id="bibtex"><code>@inproceedings{cao2026synlf,
+  title     = {SynLF: Zero-Shot Metric Depth from Light Field Cameras via Physics-Grounded Synthesis},
+  author    = {Cao, Zhexuan and Guo, Yuduo and Ding, Peisheng and Shi, Zhan and Qiao, Hui},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  year      = {2026}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="section-shell footer-inner">
+      <p>SynLF · Tsinghua University · ECCV 2026</p>
+      <p>Layout informed by the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noreferrer">Academic Project Page Template</a> and <a href="https://nerfies.github.io/" target="_blank" rel="noreferrer">Nerfies</a>.</p>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="static/js/site.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./static/vendor/three/three.module.mjs",
+      "./static/vendor/three/three.core.js": "./static/vendor/three/three.core.mjs",
+      "three/addons/": "./static/vendor/three/addons/"
+    }
+  }
+  </script>
+  <script type="module" src="static/js/mesh-viewer.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+cropsize: ${cropsize}
+mindisp: ${mindisp}
+maxdisp: ${maxdisp}
+viewspos: ${viewspos}
+randomrotaug: false
+randomdispoffset: true
+randomnoise: true
+noise_fwc: 1000
+noise_std: 0.01
+randomgray: false
+randomgray_ratio: 0.3
+image_mode: L
+pad: random
+interp_method: linear
+disp_clip: false
+random_disp_jitter: true
+
+randomblur: false
+randomblur_ratio: 0.3
+blur_sigma_min: 0.1
+blur_sigma_max: 3.0
+
+add_cocblur: true
+cocblur_ratio: 0.3
+cocblur_binsnum: 11
+cocblur_method: alpha
+cocblur_psf_size: 55
+cocblur_psf_scale: 9
+cocblur_num_parallel: 1
+
+random_photometric_aug: true
+random_photometric_aug_ratio: 0.3
+brightness: 0.4
+contrast: 0.4
+gamma: 0.2
+
+randomocc: false
+randomocc_ratio: 0.5
+occ_num: 1
+occ_size: [50, 100]
+occ_color: false
+
+random_specular: true
+random_specular_ratio: 0.5
+specular_num_shapes: [5, 10]
+specular_shape_size: [0.1, 0.2]
+specular_plane_prob: 0.5
+
+random_transparency: false
+random_transparency_ratio: 0.5
+transparency_alpha_range: [0.1, 0.4]
+transparency_num_patches: [1, 3]
+transparency_patch_size: [0.1, 0.2]
+transparency_front_glass_ratio: 0.5
+transparency_texture_prob: {perlin: 0.25, caustic: 0.25, stripe: 0.1, gradient: 0.3, noise: 0.1}

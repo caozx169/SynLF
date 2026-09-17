@@ -1,0 +1,9 @@
+# Override these roots with environment variables or Hydra CLI arguments.
+data_root: "${oc.env:SYNLF_DATA_ROOT,./data}"
+output_root: "${oc.env:SYNLF_OUTPUT_ROOT,./outputs}"
+weights_root: "${oc.env:SYNLF_WEIGHTS_ROOT,./checkpoints}"
+
+hypersim: "${paths.data_root}/hypersim"
+hypersim_stats: "./assets/hypersim_robust_stats.json"
+hypersim_exclusion_list: "./assets/hypersim_exclusions.txt"
+depth_anything_v2: "${paths.weights_root}/depth_anything_v2"

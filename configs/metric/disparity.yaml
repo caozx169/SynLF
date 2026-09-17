@@ -1,0 +1,5 @@
+disp:
+  MAE:
+    _target_: torchmetrics.MeanAbsoluteError
+  MSE:
+    _target_: torchmetrics.MeanSquaredError

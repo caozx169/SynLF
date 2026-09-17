@@ -1,0 +1,33 @@
+_target_: model.visdepth.VisDepth
+maxdisp: ${maxdisp}
+mindisp: ${mindisp}
+in_dim: 1
+out_dim: 16
+enc_ksize: [3, 3]
+enc_dila: [1, 1]
+enc_norm: gn
+enc_nparams: {num_groups: 1}
+cost_dim: 8
+cost_ksize_xy: 3
+cost_ksize_d: 3
+cost_dila: 1
+cost_dim_keep: true
+cost_norm: gn
+cost_nparams: {num_groups: 1}
+ctx_dim: 32
+ctx_norm: gn
+ctx_nparams: {num_groups: 1}
+corr_levels: 4
+corr_radius: 2
+gru_hidden_dim: 32
+gru_n_layers: 3
+gru_iters: 24
+disp_upfactor: 2
+cost_downfactor: 4
+viewspos: ${viewspos}
+vit_type: vits
+vit_ckpt: ${paths.depth_anything_v2}
+cost_interp_method: naive_triton
+ncc3D: GWC
+ncc3D_normalize: true
+ncc3D_args: {reduce: false, num_groups: 8}
